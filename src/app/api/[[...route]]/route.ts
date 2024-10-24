@@ -9,16 +9,6 @@ const routes = app
 .route("/auth",auth);
 
 
-// .get("/hello", (c)=>{
-//     return c.json({message: "world"})
-// })
-
-// .get("/project/:projectId", (c) => {
-//     const {projectId} = c.req.param();
-
-//     return c.json({project: projectId});
-// });
-
 export const GET = handle(app);
 export const POST = handle(app);
 
