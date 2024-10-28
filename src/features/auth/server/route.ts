@@ -16,7 +16,7 @@ const app = new Hono()
 .get(
   "/current", sessionMiddleware, (c) => {
   const user = c.get("user"); 
-  return c.json({data: "user"});
+  return c.json({data: user});
 }
 )
 
@@ -56,11 +56,14 @@ const app = new Hono()
     const { account } = await CreateAdminClient();
      await account.create(
         ID.unique(), 
-        email, password, name, );
+        email, 
+        password, 
+        name, 
+        );
 
     const session = await account.createEmailPasswordSession(
-        email,
-     password,
+             email,
+          password,
          );
 
     setCookie(c, AUTH_COOKIE, session.secret, {
@@ -77,7 +80,7 @@ const app = new Hono()
 
   .post(
     "/logout", sessionMiddleware, async (c) =>{
-const account = c.get("account");
+      const account = c.get("account");
 
       deleteCookie(c,AUTH_COOKIE);
       await account.deleteSession("current");
