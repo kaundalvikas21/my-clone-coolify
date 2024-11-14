@@ -155,7 +155,35 @@ if (image instanceof File) {
    );
 
    return c.json({ data: workspace });
+    }
+)
 
+.delete(
+    "/:workspaceId",
+    sessionMiddleware,
+    async (c) => {
+        const databases = c.get("databases");
+        const user = c.get("user");
+
+        const { workspaceId } = c.req.param();
+
+        const member = await GetMember({
+            databases,
+            workspaceId,
+            userId: user.$id,
+        });
+
+        if (!member || member.role !== MemberRole.ADMIN){
+            return c.json({ error: "Unauthorized"}, 401);
+        }
+
+        // TO DO: Delete Members, project and tasks
+        await databases.deleteDocument(
+            DATABASE_ID,
+            WORKSPACES_ID,
+            workspaceId,        
+      );
+      return c.json({ data: { $id: workspaceId } });
     }
 );
 

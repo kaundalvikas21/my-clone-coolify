@@ -27,6 +27,8 @@ import {
 import { Workspace } from "../types";
 import { updateWorkspaceSchema } from "../schemas";
 import { useUpdateWorkspace } from "../api/use-update-workspace";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useDeleteWorkspace } from "../api/use-delete-workspace";
 
 
 interface EditWorkspaceFormProps {
@@ -37,6 +39,16 @@ interface EditWorkspaceFormProps {
 export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceFormProps) => {
   const router = useRouter();
        const { mutate, isPending } = useUpdateWorkspace();
+       const { 
+        mutate: deleteWorkspace, 
+        isPending: isDeletingWorkspace 
+      } = useDeleteWorkspace();  
+
+       const [DeleteDialog, confirmDelete] = useConfirm(
+        "Delete Workspace",
+        "This action cannot be undone.",
+        "destructive",
+        );
 
        const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,6 +59,22 @@ export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceForm
       image: initialValues.imageUrl ?? "",
     },
   });
+
+  const handleDelete = async () => {
+    const ok = await confirmDelete();
+
+    if(!ok) return;
+
+  deleteWorkspace({
+    param: { workspaceId: initialValues.$id },
+
+  }, {
+    onSuccess: () => {
+      // router.push("/");
+      window.location.href = "/";
+    },
+  });
+  };
 
   const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
     const finalValues = {
@@ -74,7 +102,10 @@ export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceForm
   };
 
   return (
-    <Card className="w-full h-full border-none shadow-none">
+    <div className="flex flex-col gap-y-4">
+      <DeleteDialog />
+
+     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex flex-row items-center gap-x-4 p-7 space-y-0">
         <Button size="sm" variant="secondary" onClick={onCancel ? onCancel : () => router.push(`/workspaces/${initialValues.$id}`)}>
           <ArrowLeftIcon className="size-4 mr-2" />
@@ -146,16 +177,34 @@ export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceForm
                     onChange={handleImageChange}
                     disabled={isPending}
                     />
+                   {field.value ? ( 
                     <Button 
                     type="button"
                     disabled={isPending}
-                    variant="teritary"
+                    variant="destructive"
                     size="sm"
                     className="w-fit mt-2"
-                      onClick={() => inputRef.current?.click()}
+                      onClick={() => {
+                        field.onChange(null);
+                       if(inputRef.current)
+                        inputRef.current.value = "";
+                      }}
                       >
-                      Upload Image
+                      Remove Image
                     </Button>
+                    ) : (
+                      <Button 
+                      type="button"
+                      disabled={isPending}
+                      variant="teritary"
+                      size="sm"
+                      className="w-fit mt-2"
+                        onClick={() => inputRef.current?.click()}
+                        >
+                        Upload Image
+                      </Button>
+
+                    ) } 
                   </div>
                 </div>
                </div>
@@ -186,6 +235,30 @@ export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceForm
           </form>
         </Form>
       </CardContent>
-    </Card>
+     </Card>
+
+     <Card className="w-full h-full border-none shadow-none">
+      <CardContent className="p-7">
+        <div className="flex flex-col">
+         <h3 className="font-bold">Danger Zone</h3> 
+         <p className="text-sm text-muted-foreground">
+          Delete a workspace is irreversible and will remove all associated data.
+         </p>
+         <Button 
+         className="mt-6 w-fit ml-auto"
+         size="sm"
+         variant="destructive"
+         type="button"
+         disabled={isPending || isDeletingWorkspace}
+         onClick={handleDelete}
+         >
+          Delete Workspace
+         </Button>
+        </div>
+
+      </CardContent>
+
+     </Card>
+    </div>
   );
 };
