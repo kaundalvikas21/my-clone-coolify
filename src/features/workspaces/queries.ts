@@ -1,6 +1,6 @@
 import { Query } from "node-appwrite";
 
-import { GetMember } from "../members/utils";
+import { getMember  } from "../members/utils";
 
 
 import { createSessionClient } from "@/lib/appwrite";
@@ -56,7 +56,7 @@ export const getWorkspace = async ({workspaceId}: GetWorkspaceProps) =>{
    const { databases, account } = await createSessionClient();
     const user = await account.get();
 
-    const member = await GetMember({
+    const member = await getMember ({
         databases,
         userId: user.$id,
         workspaceId,
