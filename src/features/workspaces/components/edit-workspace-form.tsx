@@ -131,6 +131,7 @@ export const EditWorkspaceForm = ({ onCancel, initialValues }: EditWorkspaceForm
 
   const fullInviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
   
+  
   const handleCopyInviteLink = () => {
     navigator.clipboard.writeText(fullInviteLink)
     .then(() => toast.success("Invite link copied to clipboard")); 
