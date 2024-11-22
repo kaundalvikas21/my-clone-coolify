@@ -6,7 +6,7 @@ import { RiAddCircleFill } from "react-icons/ri";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { WorkspaceAvatar } from "@/features/workspaces/components/workspace-avatar";
-import { useCreateWorkspaceModal } from "@/features/workspaces/hooks/use-create-workspace-model";
+import { useCreateWorkspaceModal } from "@/features/workspaces/hooks/use-create-workspace-modal";
 
 import {
     Select,
