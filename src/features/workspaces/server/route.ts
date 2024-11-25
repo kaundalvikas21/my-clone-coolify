@@ -84,7 +84,7 @@ WORKSPACES_ID,
 ID.unique(),
 {
     name,
-    userid: user.$id,
+    userId: user.$id,
     imageUrl: uploadedImageUrl,
     inviteCode: generateInviteCode(6),
 },
