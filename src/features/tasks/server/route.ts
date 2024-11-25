@@ -10,7 +10,7 @@ import { CreateAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 
-import { createTasksSchema } from "../schemas";
+import { createTaskSchema } from "../schemas";
 import { TaskStatus } from "../types";
 
 const app = new Hono()
@@ -145,7 +145,7 @@ const app = new Hono()
 .post(
     "/",
     sessionMiddleware,
-    zValidator("json", createTasksSchema),
+    zValidator("json", createTaskSchema),
     async (c) => {
         const user = c.get("user");
         const databases = c.get("databases");

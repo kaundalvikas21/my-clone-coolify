@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { TaskStatus } from "./types";
 
-export const createTasksSchema = z.object({
+export const createTaskSchema = z.object({
     name: z.string().trim().min(1, "Required"),
     status: z.nativeEnum(TaskStatus, { required_error: "Required" }),
     workspaceId: z.string().trim().min(1, "Required"),
