@@ -11,7 +11,7 @@ import { sessionMiddleware } from "@/lib/session-middleware";
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 
 import { createTaskSchema } from "../schemas";
-import { TaskStatus } from "../types";
+import { Task, TaskStatus } from "../types";
 
 const app = new Hono()
 .get(
@@ -82,7 +82,7 @@ const app = new Hono()
             query.push(Query.equal("search", search));
         }
 
-        const tasks = await databases.listDocuments(
+        const tasks = await databases.listDocuments<Task>(
             DATABASE_ID,
             TASKS_ID,
             query,
@@ -115,18 +115,18 @@ const app = new Hono()
             })
         );
 
-        const populatedTasks = tasks.documents.map((tasks) => {
+        const populatedTasks = tasks.documents.map((task) => {
             const project = projects.documents.find(
-                (project) => project.$id === tasks.projectId,
+                (project) => project.$id === task.projectId,
             );
 
             const assignee  = assignees.find(
-                (assignee) => assignee.$id === tasks.assigneeIds,
+                (assignee) => assignee.$id === task.assigneeId,
             );
 
 
             return {
-                ...tasks,
+                ...task,
                 project,
                 assignee,
             };
