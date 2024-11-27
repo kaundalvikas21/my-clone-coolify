@@ -32,7 +32,7 @@ export const useCreateTask = () =>{
             queryClient.invalidateQueries({queryKey: ["tasks"] });
         },
         onError: () =>{
-            toast.error("Failed to create a task");
+            toast.error("Failed to create task");
         },
     }); 
     return mutation; 
