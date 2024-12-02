@@ -7,8 +7,11 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import  { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -133,6 +136,7 @@ const { mutate, isPending } = useRegister();
 
       <CardContent className="p-7 flex flex-col gap-y-4">
         <Button
+          onClick={() => signUpWithGoogle ()}  
           disabled={isPending}
           variant="secondary"
           size="lg"
@@ -142,6 +146,7 @@ const { mutate, isPending } = useRegister();
           Login with google
         </Button>
         <Button
+          onClick={() => signUpWithGithub ()}  
           disabled={isPending}
           variant="secondary"
           size="lg"

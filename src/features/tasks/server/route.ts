@@ -6,7 +6,7 @@ import { zValidator } from "@hono/zod-validator";
 import { getMember } from "@/features/members/utils";
 import { Project } from "@/features/projects/types"; 
 
-import { CreateAdminClient } from "@/lib/appwrite";
+import { createAdminClient } from "@/lib/appwrite";
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 
@@ -63,7 +63,7 @@ const app = new Hono()
         })
     ),
     async (c) => {
-        const { users } = await CreateAdminClient();
+        const { users } = await createAdminClient();
         const databases = c.get("databases");
         const user = c.get("user");
 
@@ -143,7 +143,7 @@ const app = new Hono()
 
                 return{
                     ...member,
-                    name: user.name,
+                    name: user.name || user.email,
                     email: user.email,
                 }
             })
@@ -295,7 +295,7 @@ const app = new Hono()
     async (c) => {
         const currentUser = c.get("user");
         const databases = c.get("databases");
-        const { users } = await CreateAdminClient();
+        const { users } = await createAdminClient();
         const { taskId } = c.req.param();
 
 
@@ -331,7 +331,7 @@ const app = new Hono()
 
         const assignee = {
             ...member,
-            name: user.name,
+            name: user.name || user.email,
             email: user.email,
         };
 

@@ -1,19 +1,27 @@
 "use client";
 
+import { z } from "zod";
+import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 
-import { DottedSeparator } from "@/components/dotted-separator";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-// import { Form } from "@/components/ui/form";
-// import { FormField } from "@/components/ui/form";
+
+import { DottedSeparator } from "@/components/dotted-separator";
+import  { signUpWithGithub, signUpWithGoogle } from "@/lib/oauth";
+
+import { loginSchema } from "../schemas";
+import { useLogin } from "../api/use-login";
+
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
 
 import {
   Form,
@@ -22,9 +30,6 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Value } from "@radix-ui/react-select";
-import { loginSchema } from "../schemas";
-import { useLogin } from "../api/use-login";
 
 
 export const SignInCard = () => {
@@ -105,6 +110,7 @@ export const SignInCard = () => {
 
       <CardContent className="p-7 flex flex-col gap-y-4">
         <Button
+          onClick={() => signUpWithGoogle ()} 
           disabled={isPending}
           variant="secondary"
           size="lg"
@@ -114,6 +120,7 @@ export const SignInCard = () => {
           Login with google
         </Button>
         <Button
+          onClick={() => signUpWithGithub ()}  
           disabled={isPending}
           variant="secondary"
           size="lg"

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { AUTH_COOKIE } from "../constants";
 import { loginSchema, registerSchema } from "../schemas";
-import { CreateAdminClient } from "@/lib/appwrite";
+import { createAdminClient } from "@/lib/appwrite";
 import { ID } from "node-appwrite";
 
 
@@ -25,7 +25,7 @@ const app = new Hono()
       const { email, password } = c.req.valid("json");
 
 
-      const {account} = await CreateAdminClient();
+      const {account} = await createAdminClient();
       const session = await account.createEmailPasswordSession(
         email,
         password,
@@ -50,7 +50,7 @@ const app = new Hono()
     async (c) => {
     const { name, email, password } = c.req.valid("json");
 
-    const { account } = await CreateAdminClient();
+    const { account } = await createAdminClient();
      await account.create(
         ID.unique(), 
         email, 
