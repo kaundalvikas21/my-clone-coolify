@@ -70,7 +70,6 @@ export const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProp
 
   }, {
     onSuccess: () => {
-      // router.push("/");
       window.location.href = `/workspaces/${initialValues.workspaceId}`;
     },
   });

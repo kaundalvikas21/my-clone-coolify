@@ -9,8 +9,6 @@ import { ID } from "node-appwrite";
 import { deleteCookie, setCookie } from "hono/cookie";
 import { sessionMiddleware } from "@/lib/session-middleware";
 
-// import { cookies } from "next/headers";
-
 const app = new Hono()
 .get(
   "/current", sessionMiddleware, (c) => {

@@ -1,4 +1,5 @@
 import "server-only";
+
 import{
 Client,
 Account,
@@ -6,6 +7,7 @@ Users,
 Databases,
 }from "node-appwrite";
 import { cookies } from "next/headers";
+
 import { AUTH_COOKIE } from "@/features/auth/constants";
 
 export async function createSessionClient(){
@@ -14,7 +16,6 @@ export async function createSessionClient(){
     .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
 
     const session = await cookies(). get(AUTH_COOKIE);
-
 
     if (!session || !session.value){
         throw new Error("Unauthorized");
