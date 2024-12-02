@@ -50,7 +50,7 @@ export const ProjectIdClient = () => {
                     </Link>
                 </Button>
             </div>
-          </div>
+          </div> 
           {analytics ? ( 
             <Analytics data={analytics}/>
           ) : null}

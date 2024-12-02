@@ -2,12 +2,11 @@
 
 import { z } from "zod";
 import Image from "next/image";
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -29,7 +28,6 @@ import { Project } from "../types";
 import { updateProjectSchema } from "../schemas";
 import { useUpdateProject } from "../api/use-update-project";
 import { useDeleteProject } from "../api/use-delete-project";
-
 
 
 interface EditProjectFormProps {
@@ -98,7 +96,6 @@ export const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProp
       form.setValue("image", file);
     }
   };
-  
   
 
   return (
@@ -237,8 +234,6 @@ export const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProp
       </CardContent>
      </Card>
 
-
-
      <Card className="w-full h-full border-none shadow-none">
       <CardContent className="p-7">
         <div className="flex flex-col">
@@ -252,7 +247,7 @@ export const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProp
          size="sm"
          variant="destructive"
          type="button"
-         disabled={isPending}
+         disabled={isPending || isDeletingProject}
          onClick={handleDelete}
          >
           Delete Project
