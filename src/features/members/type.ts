@@ -1,5 +1,12 @@
-//specifies different roles that a member can have in a system.
+import { Models } from "node-appwrite";
+
 export enum MemberRole { 
     ADMIN = "ADMIN",
     MEMBER = "MEMBER",
+};
+
+export type Member = Models.Document & {
+ workspaceId: string;
+ userId: string;
+ role: MemberRole;
 };
