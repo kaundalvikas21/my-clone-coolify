@@ -1,7 +1,6 @@
 import { Query, Databases } from "node-appwrite";
 
 import { DATABASE_ID, MEMBERS_ID } from "@/config";
-import { Interface } from "readline";
 
 interface GetMemberProps {
     databases: Databases;

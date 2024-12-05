@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/form";
 
 import { createWorkspaceSchema } from "../schemas";
-import { useCreateWorkspace } from "../api/use-create-workspace.";
+import { useCreateWorkspace } from "../api/use-create-workspace";
 
 
 interface CreateWorkspaceFormProps {

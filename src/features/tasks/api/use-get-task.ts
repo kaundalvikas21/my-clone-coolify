@@ -5,6 +5,7 @@ import { client } from "@/lib/rpc";
 
 interface useGetTaskProps{
    taskId: string
+
 };
 
 // Custom hook to fetch the "current" user's data or session.

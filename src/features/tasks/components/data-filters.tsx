@@ -45,7 +45,6 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
         status,
         assigneeId,
         projectId,
-        search,
         dueDate
     }, setFilters] = useTaskFilters();
 

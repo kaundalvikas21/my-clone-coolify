@@ -119,7 +119,7 @@ const app = new Hono()
         const project = await databases.getDocument<Project>(
             DATABASE_ID,
             PROJECTS_ID,
-            projectId,
+            projectId,    
         );
 
         const member = await getMember({
@@ -136,7 +136,7 @@ const app = new Hono()
     }
 )
 
-  .patch(
+.patch(
     "/:projectId",
     sessionMiddleware,
     zValidator("form", updateProjectSchema),

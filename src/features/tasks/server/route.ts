@@ -346,8 +346,6 @@ const app = new Hono()
     }
 )
 
-
-
 .post(
     "/bulk-update",
     sessionMiddleware,
@@ -377,7 +375,7 @@ const app = new Hono()
 
         const workspaceIds = new Set(tasksToUpdate.documents.map(task => task.workspaceId));
         if (workspaceIds.size !== 1) {
-            return c.json({ error: "All tasks must belong to the same workspace "})
+            return c.json({ error: "All tasks must belong to the same workspace"});
         }
 
         const workspaceId = workspaceIds.values().next().value;
@@ -408,7 +406,7 @@ const app = new Hono()
             })
         );
         
-        return c.json({ data: "updatedTasks" });
+        return c.json({ data: updatedTasks });
       }
     )
 

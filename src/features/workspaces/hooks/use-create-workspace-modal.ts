@@ -1,7 +1,6 @@
 // to control the modal is opened or not.
 
 import { useQueryState, parseAsBoolean } from  "nuqs";
-import { useState } from "react";
 
 export const useCreateWorkspaceModal = () => {
       const [isOpen, setIsOpen] = useQueryState(

@@ -43,7 +43,7 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: TaskViewSwitcherProps) =
     });
 
     const workspaceId = useWorkspaceId();
-    const paramProjectId = useProjectId();
+    const paramProjectId = useProjectId(); 
     const { open } = useCreateTaskModal();
 
     const { mutate: bulkUpdate } = useBulkUpdateTasks(); 
