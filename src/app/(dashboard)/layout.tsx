@@ -27,7 +27,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <Navbar/>
             <main className="h-full py-8 px-6 flex flex-col">
                 {children}
-                </main>
+            </main>
           </div>
         </div>
       </div>

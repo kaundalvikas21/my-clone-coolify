@@ -53,7 +53,7 @@ const app = new Hono()
 .get(
     "/:workspaceId",
     sessionMiddleware,
-    async (c) =>{
+    async (c) => {
         const user = c.get("user");
         const databases = c.get("databases");
         const { workspaceId } = c.req.param();
@@ -96,7 +96,8 @@ const app = new Hono()
             $id: workspace.$id, 
             name: workspace.name, 
             imageUrl: workspace.imageUrl 
-        } });
+        } 
+    });
     }
 )
 

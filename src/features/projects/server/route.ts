@@ -55,7 +55,6 @@ const app = new Hono()
         }
         
         
-        
         const project = await databases.createDocument(
         DATABASE_ID,
         PROJECTS_ID,
@@ -67,8 +66,7 @@ const app = new Hono()
         },
         );
         
-        
-        return c.json({data:project});
+        return c.json({ data: project });
         }
     )
 
@@ -102,7 +100,8 @@ const app = new Hono()
         [
         Query.equal("workspaceId", workspaceId),
         Query.orderDesc("$createdAt"),
-      ]);
+      ],
+    );
 
       return c.json({ data: projects });
     }

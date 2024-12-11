@@ -22,7 +22,7 @@ export const useGetProject = ({
                 throw new Error("Failed to fetch project");
             }
 
-            const {data} = await response.json();
+            const { data } = await response.json();
 
             return data;
              // Note: No return value specified for a successful response.
