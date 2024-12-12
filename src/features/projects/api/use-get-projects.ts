@@ -24,8 +24,6 @@ export const useGetProjects = ({
 
             const {data} = await response.json();
 
-            console.log({data})
-
             return data;
              // Note: No return value specified for a successful response.
         },

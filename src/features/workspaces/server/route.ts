@@ -18,7 +18,11 @@ import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 
 
 const app = new Hono()
-.get("/",sessionMiddleware, async (c) => {
+
+.get(
+    "/",
+sessionMiddleware, 
+async (c) => {
     const user = c.get("user");
     const databases = c.get("databases");
 
