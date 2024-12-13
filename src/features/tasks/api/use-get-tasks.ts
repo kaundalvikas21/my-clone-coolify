@@ -31,8 +31,8 @@ export const useGetTasks = ({
              search,
              assigneeId,
              dueDate,   
-            ], // Unique key for the query to allow caching and refetching
-        queryFn: async () =>{  // Query function that fetches data asynchronously.
+            ], 
+        queryFn: async () => {  
             const response = await client.api.tasks.$get({ 
                 query: { 
                     workspaceId,
@@ -42,7 +42,7 @@ export const useGetTasks = ({
                     assigneeId: assigneeId ?? undefined, 
                     dueDate: dueDate ?? undefined, 
                 },
-        });   // Sends a request to the auth API to get the current user/session.
+        });   
    
              // If the response is not OK (error or unauthorized), return null.
             if(!response.ok){

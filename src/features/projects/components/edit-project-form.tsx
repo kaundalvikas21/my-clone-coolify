@@ -79,7 +79,7 @@ export const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProp
   const onSubmit = (values: z.infer<typeof updateProjectSchema>) => {
     const finalValues = {
       ...values,
-      image: values.image instanceof File ? values.image : values.image === null ? "" : values.image,
+      image: values.image instanceof File ? values.image : "",
     };
 
     mutate({
@@ -181,7 +181,7 @@ export const EditProjectForm = ({ onCancel, initialValues }: EditProjectFormProp
                     size="sm"
                     className="w-fit mt-2"
                       onClick={() => {
-                        field.onChange("https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=");
+                        field.onChange(null);
                        if(inputRef.current)
                         inputRef.current.value = "";
                       }}

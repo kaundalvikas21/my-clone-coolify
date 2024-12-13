@@ -505,7 +505,4 @@ if (image instanceof File) {
     }
   ) 
 
-
-
-  
 export default app;

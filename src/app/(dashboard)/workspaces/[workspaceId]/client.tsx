@@ -25,7 +25,7 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 
 export const WorkspaceIdClient = () => {
     const workspaceId = useWorkspaceId();
-
+    
     const { data: analytics, isLoading: isLoadingAnalytics } = useGetWorkspaceAnalytics({ workspaceId });
     const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({ workspaceId });
     const { data: projects, isLoading: isLoadingProjects } = useGetProjects({ workspaceId });
@@ -42,17 +42,36 @@ export const WorkspaceIdClient = () => {
         return <PageLoader />
     }
 
-    if(!analytics || !tasks || !projects || !members) {
-        return <PageError message="Failed to load workspace data" />
-    } 
+    // add new code 
+    const fallbackAnalytics = analytics || {
+        taskCount: 0,
+        taskDifference: 0,
+        assignedTaskCount: 0,
+        assignedTaskDifference: 0,
+        completedTaskCount: 0,
+        completedTaskDifference: 0,
+        incompleteTaskCount: 0,
+        incompleteTaskDifference: 0,
+        overdueTaskCount: 0,
+        overdueTaskDifference: 0,
+    };
 
+    const fallbackTasks = tasks || { documents: [], total: 0 };
+    const fallbackProjects = projects || { documents: [], total: 0 };
+    const fallbackMembers = members || { documents: [], total: 0 };
+
+
+    // if(!analytics || !tasks || !projects || !members) {
+    //     return <PageError message="Failed to load workspace data" />
+    // } 
+    
     return (
         <div className="h-full flex flex-col space-y-4">
-            <Analytics data={analytics}/>
+            <Analytics data={fallbackAnalytics}/>
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                <TaskList data={tasks.documents} total={tasks.total} />
-                <ProjectList data ={projects.documents} total={projects.total} />
-                <MemberList data={members.documents} total={members.total} />
+                <TaskList data={fallbackTasks.documents} total={fallbackTasks.total} />
+                <ProjectList data ={fallbackProjects.documents} total={fallbackProjects.total} />
+                <MemberList data={fallbackMembers.documents} total={fallbackMembers.total} />
             </div>
         </div>
     );
