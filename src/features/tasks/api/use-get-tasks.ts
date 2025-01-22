@@ -22,7 +22,7 @@ export const useGetTasks = ({
     assigneeId,
     dueDate
 }: useGetTasksProps) => {
-    const query = useQuery({   // Using the useQuery hook to fetch data for the "current" query.
+    const query = useQuery({   // useQuery hook to fetch data for the "current" query.
         queryKey: [
             "tasks",
              workspaceId,
@@ -32,7 +32,7 @@ export const useGetTasks = ({
              assigneeId,
              dueDate,   
             ], 
-        queryFn: async () => {  
+        queryFn: async () => { 
             const response = await client.api.tasks.$get({ 
                 query: { 
                     workspaceId,
