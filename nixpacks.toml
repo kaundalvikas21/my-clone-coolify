@@ -3,15 +3,18 @@ nixPkgs = ["busybox", "nodejs", "nodePackages.pm2"]
 aptPkgs = ["ca-certificates", "curl"]
 
 [phases.install]
-# Use a single RUN command with shell script approach to ensure Bun is in PATH
 cmds = [
-    "curl -fsSL https://bun.sh/install | bash && source ~/.bashrc && PATH=\"$HOME/.bun/bin:$PATH\" bun install"
+    "curl -fsSL https://bun.sh/install | bash",
+    "export BUN_INSTALL=\"$HOME/.bun\"",
+    "export PATH=\"$BUN_INSTALL/bin:$PATH\"",
+    "bun install"
 ]
 
 [phases.build]
-# Same approach for the build phase
 cmds = [
-    "source ~/.bashrc && PATH=\"$HOME/.bun/bin:$PATH\" bun run build"
+    "export BUN_INSTALL=\"$HOME/.bun\"", 
+    "export PATH=\"$BUN_INSTALL/bin:$PATH\"",
+    "bun run build"
 ]
 
 [start]
@@ -20,9 +23,9 @@ cmd = '/assets/start.sh'
 [staticAssets]
 "start.sh" = '''
 #!/bin/bash
-# Source bashrc to get Bun in PATH
-source ~/.bashrc
-export PATH="$HOME/.bun/bin:$PATH"
+# Export Bun path directly (don't rely on bashrc sourcing)
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Log Bun version for debugging
 echo "Bun version: $(bun --version)"
