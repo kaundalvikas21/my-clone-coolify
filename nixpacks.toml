@@ -1,17 +1,18 @@
 [phases.setup]
 nixPkgs = ["busybox", "nodejs", "nodePackages.pm2"]
-aptPkgs = ["ca-certificates"]
+aptPkgs = ["ca-certificates", "curl"]
 
 [phases.install]
+# Use a single RUN command with shell script approach to ensure Bun is in PATH
 cmds = [
-    "curl -fsSL https://bun.sh/install | bash",
-    "export BUN_INSTALL=\"$HOME/.bun\"",
-    "export PATH=\"$BUN_INSTALL/bin:$PATH\"",
-    "bun install"
+    "curl -fsSL https://bun.sh/install | bash && source ~/.bashrc && PATH=\"$HOME/.bun/bin:$PATH\" bun install"
 ]
 
 [phases.build]
-cmds = ["bun run build"]
+# Same approach for the build phase
+cmds = [
+    "source ~/.bashrc && PATH=\"$HOME/.bun/bin:$PATH\" bun run build"
+]
 
 [start]
 cmd = '/assets/start.sh'
@@ -19,15 +20,21 @@ cmd = '/assets/start.sh'
 [staticAssets]
 "start.sh" = '''
 #!/bin/bash
-# Start application with PM2
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# Source bashrc to get Bun in PATH
+source ~/.bashrc
+export PATH="$HOME/.bun/bin:$PATH"
 
+# Log Bun version for debugging
+echo "Bun version: $(bun --version)"
+
+# Run the application based on environment
 if [ "$NODE_ENV" = "production" ]; then
-    # Production mode - use the built application
+    # Use PM2 in production
+    echo "Starting in production mode with PM2..."
     pm2-runtime start pm2.config.js --env production
 else
-    # Development mode
+    # Use development mode
+    echo "Starting in development mode..."
     bun run dev
 fi
 '''
@@ -37,7 +44,7 @@ module.exports = {
   apps: [
     {
       name: 'next-app',
-      script: 'bun',
+      script: './node_modules/.bin/next',
       args: 'start',
       instances: 'max',
       exec_mode: 'cluster',
