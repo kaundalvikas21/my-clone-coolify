@@ -3,14 +3,17 @@ nixPkgs = ["busybox", "nodejs", "nodePackages.pm2"]
 aptPkgs = ["ca-certificates", "curl", "wget"]
 
 [phases.install]
-cmds = ["bash ./install.sh"]
+cmds = [
+  "npm install"
+]
 
-# Skip the build phase since we already built in the install script
 [phases.build]
-cmds = ["echo 'Build already completed in install phase'"]
+cmds = [
+  "npm run build"
+]
 
 [start]
-cmd = 'bash -c "export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && if [ \"$NODE_ENV\" = \"production\" ]; then pm2-runtime start pm2.config.js --env production; else $HOME/.bun/bin/bun run dev; fi"'
+cmd = 'bash -c "curl -fsSL https://bun.sh/install | bash && export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && if [ \"$NODE_ENV\" = \"production\" ]; then pm2-runtime start pm2.config.js --env production; else npm run dev; fi"'
 
 [staticAssets]
 "pm2.config.js" = '''
@@ -25,7 +28,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: process.env.PORT || 3000,
-        NODE_OPTIONS: '--max-old-space-size=512' // Adjust buffer size
+        NODE_OPTIONS: '--max-old-space-size=512'
       }
     }
   ]
