@@ -1,62 +1,30 @@
 [phases.setup]
 nixPkgs = ["busybox", "nodejs", "nodePackages.pm2"]
-aptPkgs = ["ca-certificates", "curl"]
+aptPkgs = ["ca-certificates", "curl", "wget"]
+cmds = [
+    "curl -fsSL https://bun.sh/install | bash",
+    "echo 'export BUN_INSTALL=\"$HOME/.bun\"' >> $HOME/.bashrc",
+    "echo 'export PATH=\"$BUN_INSTALL/bin:$PATH\"' >> $HOME/.bashrc",
+    "source $HOME/.bashrc || true",
+    "ln -s $HOME/.bun/bin/bun /usr/local/bin/bun || true",  # Create a symlink for global access
+    "chmod +x $HOME/.bun/bin/bun"  # Ensure bun is executable
+]
+
+# Define environment variables that persist across all phases
+[phases.setup.env]
+BUN_INSTALL = "$HOME/.bun"
+PATH = "$HOME/.bun/bin:$PATH"
 
 [phases.install]
 cmds = [
-    "curl -fsSL https://bun.sh/install | bash",
-    "export BUN_INSTALL=\"$HOME/.bun\"",
-    "export PATH=\"$BUN_INSTALL/bin:$PATH\"",
-    "bun install"
+    "$HOME/.bun/bin/bun --version",
+    "$HOME/.bun/bin/bun install"
 ]
 
 [phases.build]
 cmds = [
-    "export BUN_INSTALL=\"$HOME/.bun\"", 
-    "export PATH=\"$BUN_INSTALL/bin:$PATH\"",
-    "bun run build"
+    "$HOME/.bun/bin/bun run build"
 ]
 
 [start]
 cmd = '/assets/start.sh'
-
-[staticAssets]
-"start.sh" = '''
-#!/bin/bash
-# Export Bun path directly (don't rely on bashrc sourcing)
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# Log Bun version for debugging
-echo "Bun version: $(bun --version)"
-
-# Run the application based on environment
-if [ "$NODE_ENV" = "production" ]; then
-    # Use PM2 in production
-    echo "Starting in production mode with PM2..."
-    pm2-runtime start pm2.config.js --env production
-else
-    # Use development mode
-    echo "Starting in development mode..."
-    bun run dev
-fi
-'''
-
-"pm2.config.js" = '''
-module.exports = {
-  apps: [
-    {
-      name: 'next-app',
-      script: './node_modules/.bin/next',
-      args: 'start',
-      instances: 'max',
-      exec_mode: 'cluster',
-      env: {
-        NODE_ENV: 'production',
-        PORT: process.env.PORT || 3000,
-        NODE_OPTIONS: '--max-old-space-size=512' // Adjust buffer size
-      }
-    }
-  ]
-};
-'''
