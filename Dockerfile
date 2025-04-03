@@ -1,28 +1,39 @@
-FROM oven/bun:1.1.45-alpine AS base
-RUN apk add --no-cache git wget
+FROM oven/bun:latest
 
+# Set working directory
 WORKDIR /app
 
-COPY package.json bun.lockb ./
-# Make sure these files are present before installing
+# Copy package files for dependency installation
+COPY package.json bun.lockb* ./
+
+# Install dependencies
 RUN bun install --frozen-lockfile
 
-# Now copy the rest of your source code
+# Copy the rest of the application
 COPY . .
 
-FROM base AS build
+# Build the application
+RUN bun run build
 
-# Declare the build argument
-ARG SOURCE_COMMIT
-# Set the environment variable using the build argument
-ENV SOURCE_COMMIT=${SOURCE_COMMIT}
+# Use PM2 for better production process management
+RUN npm install -g pm2
 
+# Set environment variables
 ENV NODE_ENV=production
+ENV PORT=3000
 
-# Run build script
-# RUN bun run build
+# Expose port
+EXPOSE 3000
 
-FROM build AS release
-USER bun
-EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "route.ts" ]
+# Create a start script
+RUN echo '#!/bin/bash\n\
+if [ "$NODE_ENV" = "production" ]; then\n\
+  echo "Starting in production mode..."\n\
+  pm2-runtime start ./node_modules/.bin/next -- start\n\
+else\n\
+  echo "Starting in development mode..."\n\
+  bun run dev\n\
+fi' > /app/start.sh && chmod +x /app/start.sh
+
+# Start the application
+CMD ["/app/start.sh"]
