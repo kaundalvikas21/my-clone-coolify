@@ -1,30 +1,33 @@
 [phases.setup]
 nixPkgs = ["busybox", "nodejs", "nodePackages.pm2"]
 aptPkgs = ["ca-certificates", "curl", "wget"]
-cmds = [
-    "curl -fsSL https://bun.sh/install | bash",
-    "echo 'export BUN_INSTALL=\"$HOME/.bun\"' >> $HOME/.bashrc",
-    "echo 'export PATH=\"$BUN_INSTALL/bin:$PATH\"' >> $HOME/.bashrc",
-    "source $HOME/.bashrc || true",
-    "ln -s $HOME/.bun/bin/bun /usr/local/bin/bun || true",  # Create a symlink for global access
-    "chmod +x $HOME/.bun/bin/bun"  # Ensure bun is executable
-]
-
-# Define environment variables that persist across all phases
-[phases.setup.env]
-BUN_INSTALL = "$HOME/.bun"
-PATH = "$HOME/.bun/bin:$PATH"
 
 [phases.install]
-cmds = [
-    "$HOME/.bun/bin/bun --version",
-    "$HOME/.bun/bin/bun install"
-]
+cmds = ["bash ./install.sh"]
 
+# Skip the build phase since we already built in the install script
 [phases.build]
-cmds = [
-    "$HOME/.bun/bin/bun run build"
-]
+cmds = ["echo 'Build already completed in install phase'"]
 
 [start]
-cmd = '/assets/start.sh'
+cmd = 'bash -c "export BUN_INSTALL=\"$HOME/.bun\" && export PATH=\"$BUN_INSTALL/bin:$PATH\" && if [ \"$NODE_ENV\" = \"production\" ]; then pm2-runtime start pm2.config.js --env production; else $HOME/.bun/bin/bun run dev; fi"'
+
+[staticAssets]
+"pm2.config.js" = '''
+module.exports = {
+  apps: [
+    {
+      name: 'next-app',
+      script: './node_modules/.bin/next',
+      args: 'start',
+      instances: 'max',
+      exec_mode: 'cluster',
+      env: {
+        NODE_ENV: 'production',
+        PORT: process.env.PORT || 3000,
+        NODE_OPTIONS: '--max-old-space-size=512' // Adjust buffer size
+      }
+    }
+  ]
+};
+'''
